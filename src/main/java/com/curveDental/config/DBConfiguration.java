@@ -26,7 +26,7 @@ public class DBConfiguration {
 
 		DriverManagerDataSource dataSource = new DriverManagerDataSource();
 		dataSource.setDriverClassName("com.mysql.jdbc.Driver");
-		dataSource.setUrl("jdbc:mysql://localhost:3306/testdb");
+		dataSource.setUrl("jdbc:mysql://localhost:3306/testdb?useSSL=false");
 		dataSource.setUsername("root");
 		dataSource.setPassword("planplus");
 		return dataSource;

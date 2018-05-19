@@ -1,4 +1,6 @@
 package com.curveDental.service.impl;
+
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,8 +9,10 @@ import org.springframework.stereotype.Service;
 
 import com.curveDental.dao.GenericHibernateDao;
 import com.curveDental.dto.ServiceRecordDTO;
+import com.curveDental.dto.ServiceTypeDTO;
 import com.curveDental.model.Car;
 import com.curveDental.model.CarType;
+import com.curveDental.model.ServiceRecord;
 import com.curveDental.model.ServiceType;
 import com.curveDental.service.CarService;
 
@@ -17,6 +21,7 @@ public class CarServiceImpl implements CarService {
 
 	GenericHibernateDao<Car> carDAO;
 	GenericHibernateDao<CarType> carTypeDAO;
+	GenericHibernateDao<ServiceType> serviceTypeDAO;
 
 	@Autowired
 	public void setCarDao(GenericHibernateDao<Car> daoToSet) {
@@ -28,6 +33,12 @@ public class CarServiceImpl implements CarService {
 	public void setCarTypeDao(GenericHibernateDao<CarType> daoToSet) {
 		carTypeDAO = daoToSet;
 		carTypeDAO.setClazz(CarType.class);
+	}
+
+	@Autowired
+	public void setServiceTypeDao(GenericHibernateDao<ServiceType> daoToSet) {
+		serviceTypeDAO = daoToSet;
+		serviceTypeDAO.setClazz(ServiceType.class);
 	}
 
 
@@ -46,14 +57,47 @@ public class CarServiceImpl implements CarService {
 
 	@Override
 	public List<ServiceRecordDTO> findAllRecordsByCarId(Long carId) {
-		// TODO Auto-generated method stub
-		return null;
+		Car car = carDAO.findOne(carId);
+		List<ServiceRecord> records = car.getRecords();
+		List<ServiceType> serviceTypes = serviceTypeDAO.findAll();
+		List<ServiceRecordDTO> recordDTOs = new ArrayList<>();
+		for (ServiceRecord record : records) {
+			boolean isChecked = false;
+			boolean isAllowed = false;
+			for (ServiceType serviceType : serviceTypes) {
+				if (serviceType.getServiceTypeId() == record.getServiceType().getServiceTypeId()) {
+					isChecked = true;
+					break;
+				}
+			}
+			Long serviceId = record.getServiceId();
+			Long service_type_id = record.getServiceType().getServiceTypeId();
+			Date serviceDate = record.getServiceDate();
+
+			recordDTOs.add(new ServiceRecordDTO(serviceId, service_type_id, serviceDate, isAllowed,
+				isChecked));
+		}
+		return recordDTOs;
 	}
 
 	@Override
 	public List<ServiceType> findAllServiceTypes() {
-		// TODO Auto-generated method stub
-		return null;
+		return serviceTypeDAO.findAll();
+	}
+
+	@Override
+	public List<ServiceTypeDTO> findServiceTypesByCarTypeId(Long carTypeId) {
+		List<ServiceTypeDTO> rtn = new ArrayList<>();
+		List<ServiceType> serviceTypes = serviceTypeDAO.findAll();
+		for (ServiceType serviceType : serviceTypes) {
+			CarType carType = carTypeDAO.findOne(carTypeId);
+			boolean isAllowed = false;
+			if (carType.getServiceTypes().contains(serviceType))
+				isAllowed = true;
+			rtn.add(new ServiceTypeDTO(serviceType.getServiceTypeId(),
+				serviceType.getServiceTypeName(), isAllowed));
+		}
+		return rtn;
 	}
 
 }

@@ -10,6 +10,20 @@ public class ServiceRecordDTO {
 	private boolean isAllowed;
 	private boolean isChecked;
 
+	public ServiceRecordDTO() {
+
+	}
+
+	public ServiceRecordDTO(Long serviceId, Long service_type_id, Date serviceDate,
+		boolean isAllowed, boolean isChecked) {
+		super();
+		this.serviceId = serviceId;
+		this.service_type_id = service_type_id;
+		this.serviceDate = serviceDate;
+		this.isAllowed = isAllowed;
+		this.isChecked = isChecked;
+	}
+
 	public Long getServiceId() {
 		return serviceId;
 	}

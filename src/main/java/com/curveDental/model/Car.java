@@ -1,8 +1,14 @@
 package com.curveDental.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 @Entity(name = "Car")
 @Table(name = "car")
@@ -30,7 +36,25 @@ public class Car implements Serializable {
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "car_type_id", referencedColumnName = "car_type_id", insertable = false,
 		updatable = false)
+	@JsonIgnore
 	private CarType carType;
+
+	@OneToMany(mappedBy = "car")
+	@JsonIgnore
+	private List<ServiceRecord> records = new ArrayList<>();
+
+	@Transient
+	@JsonSerialize
+	@JsonDeserialize
+	private Long carTypeId;
+
+	public Long getCarTypeId() {
+		return carType.getCarTypeId();
+	}
+
+	public void setCarTypeId(Long carTypeId) {
+		this.carTypeId = carTypeId;
+	}
 
 	public Long getCarId() {
 		return carId;
@@ -78,6 +102,18 @@ public class Car implements Serializable {
 
 	public void setCarType(CarType carType) {
 		this.carType = carType;
+	}
+
+	public List<ServiceRecord> getRecords() {
+		return records;
+	}
+
+	public void setRecords(List<ServiceRecord> records) {
+		this.records = records;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
 	}
 
 	@Override

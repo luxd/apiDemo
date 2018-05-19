@@ -16,7 +16,7 @@ public class ServiceController {
 	private CarService carService;
 
 
-	@RequestMapping(value = "/serviceTypes", method = RequestMethod.GET)
+	@RequestMapping(value = "/service_types", method = RequestMethod.GET)
 	public List<ServiceType> listServiceTypes() {
 		return carService.findAllServiceTypes();
 	}

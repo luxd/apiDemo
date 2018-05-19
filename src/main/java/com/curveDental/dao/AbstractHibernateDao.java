@@ -19,7 +19,7 @@ public abstract class AbstractHibernateDao< T extends Serializable > {
       this.clazz = clazzToSet;
    }
  
-   public T findOne( long id ){
+	public T findOne(long id) {
       return (T) getCurrentSession().get( clazz, id );
    }
 
@@ -39,7 +39,8 @@ public abstract class AbstractHibernateDao< T extends Serializable > {
    public void delete( T entity ){
       getCurrentSession().delete( entity );
    }
-   public void deleteById( long entityId ) {
+
+	public void deleteById(long entityId) {
       T entity = findOne( entityId );
       delete( entity );
    }

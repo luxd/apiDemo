@@ -58,6 +58,14 @@ public class CarType implements Serializable {
 		this.carTypeName = carTypeName;
 	}
 
+	public List<ServiceType> getServiceTypes() {
+		return serviceTypes;
+	}
+
+	public void setServiceTypes(List<ServiceType> serviceTypes) {
+		this.serviceTypes = serviceTypes;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;

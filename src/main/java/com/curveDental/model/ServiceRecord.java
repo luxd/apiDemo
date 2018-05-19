@@ -5,6 +5,8 @@ import java.sql.Date;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 
 @Entity(name = "ServiceRecord")
 @Table(name = "service_record")
@@ -29,6 +31,7 @@ public class ServiceRecord  implements Serializable {
 	@JoinColumn(name = "service_type_id", referencedColumnName = "service_type_id",
 		insertable = false,
 		updatable = false)
+	@JsonIgnore
 	private ServiceType serviceType;
 
 	public Long getServiceId() {
