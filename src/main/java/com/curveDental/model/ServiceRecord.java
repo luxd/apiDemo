@@ -22,12 +22,12 @@ public class ServiceRecord  implements Serializable {
 	@Column(name = "service_date", nullable = false)
 	private Date serviceDate;
 
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "car_id", referencedColumnName = "car_id", insertable = false,
 		updatable = false)
 	private Car car;
 
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "service_type_id", referencedColumnName = "service_type_id",
 		insertable = false,
 		updatable = false)

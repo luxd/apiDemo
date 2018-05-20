@@ -37,15 +37,14 @@ public class Car implements Serializable {
 	@Column(name = "car_type_id", nullable = false)
 	private Long carTypeId;
 
-	@ManyToOne(fetch = FetchType.LAZY, optional = false,
-		cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "car_type_id", referencedColumnName = "car_type_id", insertable = false,
 		updatable = false)
 	@JsonIgnore
 	private CarType carType;
 
-	@OneToMany(mappedBy = "car", fetch = FetchType.LAZY,
-		cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+	@OneToMany(mappedBy = "car", fetch = FetchType.LAZY, orphanRemoval = true,
+		cascade = { CascadeType.ALL })
 	@JsonIgnore
 	private List<ServiceRecord> records = new ArrayList<>();
 

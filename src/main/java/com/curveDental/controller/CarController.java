@@ -2,6 +2,9 @@ package com.curveDental.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.curveDental.dto.ServiceRecordDTO;
@@ -11,6 +14,8 @@ import com.curveDental.model.CarType;
 import com.curveDental.service.CarService;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:4200")
+@RequestMapping(value = "", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 public class CarController {
 
     @Autowired
@@ -41,8 +46,20 @@ public class CarController {
 
 	// update car if existing, otherwise create new one
 	@RequestMapping(value = "/car", method = RequestMethod.POST)
-	public Car UpdateCreateCar(@RequestBody Car car) {
-		return carService.updateCreateCar(car);
+	public ResponseEntity<Car> updateCreateCar(@RequestBody Car car) {
+		Car newCar = carService.updateCreateCar(car);
+		return new ResponseEntity<Car>(newCar, HttpStatus.OK);
 	}
+
+	// update car if existing, otherwise create new one
+	@RequestMapping(value = "/car/{carId}", method = RequestMethod.DELETE)
+	public ResponseEntity<Car> deleteCar(@PathVariable Long carId) {
+		Car car = carService.deleteCar(carId);
+		if (car == null)
+			return new ResponseEntity<Car>(HttpStatus.NOT_FOUND);
+		else
+			return new ResponseEntity<Car>(HttpStatus.NO_CONTENT);
+	}
+
 }
 

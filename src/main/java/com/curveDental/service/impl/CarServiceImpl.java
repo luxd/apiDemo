@@ -128,4 +128,15 @@ public class CarServiceImpl implements CarService {
 		return car;
 	}
 
+	@Override
+	public Car deleteCar(Long carId) {
+		Car car = carDAO.findOne(carId);
+		if (car == null) {
+			return null;
+		}
+		carDAO.delete(car);
+		return car;
+
+	}
+
 }

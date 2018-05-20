@@ -21,4 +21,6 @@ public interface CarService {
 
 	Car updateCreateCar(Car car);
 
+	Car deleteCar(Long carId);
+
 }
