@@ -7,8 +7,6 @@ import java.util.List;
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 @Entity(name = "Car")
 @Table(name = "car")
@@ -33,23 +31,44 @@ public class Car implements Serializable {
 	@Column(name = "odometer", nullable = false)
 	private int odometer;
 
-	@ManyToOne(fetch = FetchType.EAGER)
+	// @Transient
+	// @JsonSerialize
+	// @JsonDeserialize
+	@Column(name = "car_type_id", nullable = false)
+	private Long carTypeId;
+
+	@ManyToOne(fetch = FetchType.LAZY, optional = false,
+		cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	@JoinColumn(name = "car_type_id", referencedColumnName = "car_type_id", insertable = false,
 		updatable = false)
 	@JsonIgnore
 	private CarType carType;
 
-	@OneToMany(mappedBy = "car")
+	@OneToMany(mappedBy = "car", fetch = FetchType.LAZY,
+		cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	@JsonIgnore
 	private List<ServiceRecord> records = new ArrayList<>();
 
-	@Transient
-	@JsonSerialize
-	@JsonDeserialize
-	private Long carTypeId;
+
+	public Car() {
+
+	}
+
+	public Car(Long carId, String make, String model, int madeYear, int odometer, Long carTypeId,
+		CarType carType, List<ServiceRecord> records) {
+		super();
+		this.carId = carId;
+		this.make = make;
+		this.model = model;
+		this.madeYear = madeYear;
+		this.odometer = odometer;
+		this.carTypeId = carTypeId;
+		this.carType = carType;
+		this.records = records;
+	}
 
 	public Long getCarTypeId() {
-		return carType.getCarTypeId();
+		return carTypeId;
 	}
 
 	public void setCarTypeId(Long carTypeId) {

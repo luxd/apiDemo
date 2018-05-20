@@ -23,17 +23,21 @@ public abstract class AbstractHibernateDao< T extends Serializable > {
       return (T) getCurrentSession().get( clazz, id );
    }
 
+	public T load(long id) {
+		return (T) getCurrentSession().load(clazz, id);
+	}
+
 	@SuppressWarnings("unchecked")
    public List< T > findAll(){
       return getCurrentSession().createQuery( "from " + clazz.getName() ).list();
    }
  
-   public void create( T entity ){
-      getCurrentSession().persist( entity );
+	public Long create(T entity) {
+		return (Long) getCurrentSession().save(entity);
    }
  
    public void update( T entity ){
-      getCurrentSession().merge( entity );
+		getCurrentSession().saveOrUpdate(entity);
    }
  
    public void delete( T entity ){

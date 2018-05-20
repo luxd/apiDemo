@@ -2,10 +2,7 @@ package com.curveDental.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.curveDental.dto.ServiceRecordDTO;
 import com.curveDental.dto.ServiceTypeDTO;
@@ -40,6 +37,12 @@ public class CarController {
 	@RequestMapping(value = "/car_type/{carTypeId}/service_types", method = RequestMethod.GET)
 	public List<ServiceTypeDTO> listAllServiceTypes(@PathVariable Long carTypeId) {
 		return carService.findServiceTypesByCarTypeId(carTypeId);
+	}
+
+	// update car if existing, otherwise create new one
+	@RequestMapping(value = "/car", method = RequestMethod.POST)
+	public Car UpdateCreateCar(@RequestBody Car car) {
+		return carService.updateCreateCar(car);
 	}
 }
 

@@ -19,4 +19,6 @@ public interface CarService {
 
 	List<ServiceTypeDTO> findServiceTypesByCarTypeId(Long carTypeId);
 
+	Car updateCreateCar(Car car);
+
 }

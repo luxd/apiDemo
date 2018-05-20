@@ -6,6 +6,8 @@ import java.util.List;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity(name = "CarType")
 @Table(name = "car_type")
 public class CarType implements Serializable {
@@ -23,6 +25,7 @@ public class CarType implements Serializable {
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinTable(name = "cartype_servicetype", joinColumns = @JoinColumn(name = "carType_id"),
 		inverseJoinColumns = @JoinColumn(name = "serviceType_id"))
+	@JsonIgnore
 	private List<ServiceType> serviceTypes = new ArrayList<>();
 
 	public void addServiceType(ServiceType serviceType) {

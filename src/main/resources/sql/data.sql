@@ -1,7 +1,7 @@
 -- data.sql
 
 
-insert into car_type(car_type_id,name) values (1,'Car');
+insert into car_type(car_type_id,name) values (1,'Gas');
 insert into car_type(car_type_id,name) values (2,'Diesel');
 insert into car_type(car_type_id,name) values (3,'Electric');
 insert into car_type(car_type_id,name) values (4,'Hybrid');

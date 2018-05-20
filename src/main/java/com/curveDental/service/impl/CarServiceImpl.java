@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.curveDental.dao.GenericHibernateDao;
 import com.curveDental.dto.ServiceRecordDTO;
@@ -17,6 +18,7 @@ import com.curveDental.model.ServiceType;
 import com.curveDental.service.CarService;
 
 @Service
+@Transactional
 public class CarServiceImpl implements CarService {
 
 	GenericHibernateDao<Car> carDAO;
@@ -98,6 +100,32 @@ public class CarServiceImpl implements CarService {
 				serviceType.getServiceTypeName(), isAllowed));
 		}
 		return rtn;
+	}
+
+	// when changing carType, the service record may be deleted as service may
+	// be not allowed after change
+	@Override
+	public Car updateCreateCar(Car car) {
+		if (car.getCarId() == null || car.getCarId() == 0) {
+			Long id = carDAO.create(car);
+			car.setCarId(id);
+		} else {
+			Car newCar = carDAO.findOne(car.getCarId());
+			if (newCar == null) {
+				car.setCarId(null);
+				Long id = carDAO.create(car);
+				car.setCarId(id);
+			} else {
+				newCar.setCarId(car.getCarId());
+				newCar.setCarTypeId(car.getCarTypeId());
+				newCar.setMake(car.getMake());
+				newCar.setMadeYear(car.getMadeYear());
+				newCar.setModel(car.getModel());
+				newCar.setOdometer(car.getOdometer());
+				carDAO.update(newCar);
+			}
+		}
+		return car;
 	}
 
 }
