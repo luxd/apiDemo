@@ -23,19 +23,19 @@ public class CarType implements Serializable {
 	private String carTypeName;
 
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	@JoinTable(name = "cartype_servicetype", joinColumns = @JoinColumn(name = "carType_id"),
-		inverseJoinColumns = @JoinColumn(name = "serviceType_id"))
+	@JoinTable(name = "cartype_servicetype", joinColumns = @JoinColumn(name = "car_type_id"),
+		inverseJoinColumns = @JoinColumn(name = "service_type_id"))
 	@JsonIgnore
 	private List<ServiceType> serviceTypes = new ArrayList<>();
 
 	public void addServiceType(ServiceType serviceType) {
 		serviceTypes.add(serviceType);
-		// serviceType.getCarTypes().add(this);
+		serviceType.getCarTypes().add(this);
 	}
 
 	public void removeServiceType(ServiceType serviceType) {
 		serviceTypes.remove(serviceType);
-		// serviceType.getCarTypes().remove(this);
+		serviceType.getCarTypes().remove(this);
 	}
 
 	public CarType() {

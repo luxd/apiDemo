@@ -2,6 +2,8 @@ package com.curveDental.model;
 
 import java.io.Serializable;
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.*;
 
@@ -25,14 +27,31 @@ public class ServiceRecord  implements Serializable {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "car_id", referencedColumnName = "car_id", insertable = false,
 		updatable = false)
+	@JsonIgnore
 	private Car car;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "service_type_id", referencedColumnName = "service_type_id",
-		insertable = false,
-		updatable = false)
-	@JsonIgnore
-	private ServiceType serviceType;
+	// @ManyToOne(fetch = FetchType.LAZY)
+	// @JoinColumn(name = "service_type_id", referencedColumnName =
+	// "service_type_id",
+	// insertable = false,
+	// updatable = false)
+	// @JsonIgnore
+	// private ServiceType serviceType;
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JoinTable(name = "servicerecord_servicetype",
+		joinColumns = @JoinColumn(name = "service_record_id"),
+		inverseJoinColumns = @JoinColumn(name = "service_type_id"))
+	private List<ServiceType> serviceTypes = new ArrayList<>();
+
+	public void addServiceType(ServiceType serviceType) {
+		serviceTypes.add(serviceType);
+		serviceType.getServiceRecords().add(this);
+	}
+
+	public void removeServiceType(ServiceType serviceType) {
+		serviceTypes.remove(serviceType);
+		serviceType.getServiceRecords().remove(this);
+	}
 
 	public Long getServiceId() {
 		return serviceId;
@@ -50,13 +69,6 @@ public class ServiceRecord  implements Serializable {
 		this.car = car;
 	}
 
-	public ServiceType getServiceType() {
-		return serviceType;
-	}
-
-	public void setServiceType(ServiceType serviceType) {
-		this.serviceType = serviceType;
-	}
 
 	public Date getServiceDate() {
 		return serviceDate;
@@ -64,6 +76,14 @@ public class ServiceRecord  implements Serializable {
 
 	public void setServiceDate(Date serviceDate) {
 		this.serviceDate = serviceDate;
+	}
+
+	public List<ServiceType> getServiceTypes() {
+		return serviceTypes;
+	}
+
+	public void setServiceTypes(List<ServiceType> serviceTypes) {
+		this.serviceTypes = serviceTypes;
 	}
 
 	@Override

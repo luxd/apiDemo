@@ -1,16 +1,16 @@
 package com.curveDental.service.impl;
 
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.curveDental.constants.Constants;
 import com.curveDental.dao.GenericHibernateDao;
-import com.curveDental.dto.ServiceRecordDTO;
-import com.curveDental.dto.ServiceTypeDTO;
+import com.curveDental.exception.ValidationException;
 import com.curveDental.model.Car;
 import com.curveDental.model.CarType;
 import com.curveDental.model.ServiceRecord;
@@ -58,28 +58,38 @@ public class CarServiceImpl implements CarService {
 	}
 
 	@Override
-	public List<ServiceRecordDTO> findAllRecordsByCarId(Long carId) {
+	public List<ServiceRecord> findAllRecordsByCarId(Long carId) {
 		Car car = carDAO.findOne(carId);
-		List<ServiceRecord> records = car.getRecords();
-		List<ServiceType> serviceTypes = serviceTypeDAO.findAll();
-		List<ServiceRecordDTO> recordDTOs = new ArrayList<>();
-		for (ServiceRecord record : records) {
-			boolean isChecked = false;
-			boolean isAllowed = false;
-			for (ServiceType serviceType : serviceTypes) {
-				if (serviceType.getServiceTypeId() == record.getServiceType().getServiceTypeId()) {
-					isChecked = true;
-					break;
-				}
-			}
-			Long serviceId = record.getServiceId();
-			Long service_type_id = record.getServiceType().getServiceTypeId();
-			Date serviceDate = record.getServiceDate();
-
-			recordDTOs.add(new ServiceRecordDTO(serviceId, service_type_id, serviceDate, isAllowed,
-				isChecked));
+		if (car == null)
+			throw new ValidationException(Constants.INVALID_CAR_ID, Constants.VALIDATION_ERROR);
+		// Hibernate.initialize(car.getRecords());
+		for (ServiceRecord record : car.getRecords()) {
+			Hibernate.initialize(record.getServiceTypes());
 		}
-		return recordDTOs;
+		return car.getRecords();
+		// List<ServiceRecord> records = car.getRecords();
+		// List<ServiceType> serviceTypes = serviceTypeDAO.findAll();
+		// List<ServiceRecordDTO> recordDTOs = new ArrayList<>();
+		// for (ServiceRecord record : records) {
+		// boolean isChecked = false;
+		// boolean isAllowed = false;
+		// for (ServiceType serviceType : serviceTypes) {
+		// if (serviceType.getServiceTypeId() ==
+		// record.getServiceType().getServiceTypeId()) {
+		// isChecked = true;
+		// break;
+		// }
+		// }
+		// Long serviceId = record.getServiceId();
+		// Long service_type_id = record.getServiceType().getServiceTypeId();
+		// Date serviceDate = record.getServiceDate();
+		//
+		// recordDTOs.add(new ServiceRecordDTO(serviceId, service_type_id,
+		// serviceDate, isAllowed,
+		// isChecked));
+		// }
+		// return recordDTOs;
+		// return null;
 	}
 
 	@Override
@@ -88,17 +98,24 @@ public class CarServiceImpl implements CarService {
 	}
 
 	@Override
-	public List<ServiceTypeDTO> findServiceTypesByCarTypeId(Long carTypeId) {
-		List<ServiceTypeDTO> rtn = new ArrayList<>();
-		List<ServiceType> serviceTypes = serviceTypeDAO.findAll();
-		for (ServiceType serviceType : serviceTypes) {
-			CarType carType = carTypeDAO.findOne(carTypeId);
-			boolean isAllowed = false;
-			if (carType.getServiceTypes().contains(serviceType))
-				isAllowed = true;
-			rtn.add(new ServiceTypeDTO(serviceType.getServiceTypeId(),
-				serviceType.getServiceTypeName(), isAllowed));
+	public List<Long> findServiceTypesByCarTypeId(Long carTypeId) {
+		List<Long> rtn = new ArrayList<>();
+		CarType carType = carTypeDAO.findOne(carTypeId);
+		for(ServiceType serviceType : carType.getServiceTypes()){
+			rtn.add(serviceType.getServiceTypeId());
 		}
+			
+			
+			
+//		List<ServiceType> serviceTypes = serviceTypeDAO.findAll();
+//		for (ServiceType serviceType : serviceTypes) {
+//			CarType carType = carTypeDAO.findOne(carTypeId);
+//			boolean isAllowed = false;
+//			if (carType.getServiceTypes().contains(serviceType))
+//				isAllowed = true;
+//			rtn.add(new ServiceTypeDTO(serviceType.getServiceTypeId(),
+//				serviceType.getServiceTypeName(), isAllowed));
+//		}
 		return rtn;
 	}
 

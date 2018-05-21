@@ -17,7 +17,11 @@ insert into service_type(name) values ("Full brake check");
 insert into car(make, model, madeyear,odometer, car_type_id) values("Honda","CR-V",2017,45000,1);
 
 
-insert into service_record(service_date, car_id, service_type_id) values('2018-04-20',1,1);
+insert into service_record(service_date, car_id) values('2018-04-20',1);
+
+insert into servicerecord_servicetype(service_record_id, service_type_id) values(1,1);
+insert into servicerecord_servicetype(service_record_id, service_type_id) values(1,3);
+
 
 insert into cartype_servicetype values(1,1);
 insert into cartype_servicetype values(1,2);
