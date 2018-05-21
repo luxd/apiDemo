@@ -21,15 +21,16 @@ public class CarController {
     @Autowired
 	private CarService carService;
 
-
+	// get all cars
 	@RequestMapping(value = "/cars", method = RequestMethod.GET)
-	public List<Car> listAllCars() {
-		return carService.findAll();
+	public ResponseEntity<List<Car>> listAllCars() {
+		return new ResponseEntity<List<Car>>(carService.findAll(), HttpStatus.OK);
 	}
 
+	// get all car types
 	@RequestMapping(value = "/car_types", method = RequestMethod.GET)
-	public List<CarType> listAllCarTypes() {
-		return carService.findAllCarTypes();
+	public ResponseEntity<List<CarType>> listAllCarTypes() {
+		return new ResponseEntity<List<CarType>>(carService.findAllCarTypes(), HttpStatus.OK);
 	}
 
 	// get all service records of a specific car
@@ -37,7 +38,6 @@ public class CarController {
 	public ResponseEntity<List<ServiceRecord>> listAllCarService(@PathVariable Long carId) {
 		List<ServiceRecord> list = carService.findAllRecordsByCarId(carId);
 		return new ResponseEntity<List<ServiceRecord>>(list, HttpStatus.OK);
-
 	}
 
 	// save service records for a specific car
@@ -46,7 +46,6 @@ public class CarController {
 		@RequestBody ServiceRecord serviceRecord) {
 		ServiceRecord record = carService.updateRecordsByCarId(carId, serviceRecord);
 		return new ResponseEntity<ServiceRecord>(record, HttpStatus.OK);
-
 	}
 
 	// delete service records for a specific car
@@ -63,8 +62,9 @@ public class CarController {
 
 	// get all available service types for a specific car type
 	@RequestMapping(value = "/car_type/{carTypeId}/service_types", method = RequestMethod.GET)
-	public List<Long> listAllServiceTypes(@PathVariable Long carTypeId) {
-		return carService.findServiceTypesByCarTypeId(carTypeId);
+	public ResponseEntity<List<Long>> listAllServiceTypes(@PathVariable Long carTypeId) {
+		return new ResponseEntity<List<Long>>(carService.findServiceTypesByCarTypeId(carTypeId),
+			HttpStatus.OK);
 	}
 
 	// update car if existing, otherwise create new one
