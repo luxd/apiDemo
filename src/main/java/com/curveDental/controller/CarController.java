@@ -40,6 +40,27 @@ public class CarController {
 
 	}
 
+	// save service records for a specific car
+	@RequestMapping(value = "/car/{carId}/services", method = RequestMethod.POST)
+	public ResponseEntity<ServiceRecord> updateCarServiceRecords(@PathVariable Long carId,
+		@RequestBody ServiceRecord serviceRecord) {
+		ServiceRecord record = carService.updateRecordsByCarId(carId, serviceRecord);
+		return new ResponseEntity<ServiceRecord>(record, HttpStatus.OK);
+
+	}
+
+	// delete service records for a specific car
+	@RequestMapping(value = "/car/{carId}/services/{serviceId}", method = RequestMethod.DELETE)
+	public ResponseEntity<ServiceRecord> deleteCarServiceRecord(@PathVariable Long carId,
+		@PathVariable Long serviceId) {
+		ServiceRecord record = carService.deleteRecordsByServiceId(carId, serviceId);
+		if (record == null)
+			return new ResponseEntity<ServiceRecord>(HttpStatus.NOT_FOUND);
+		else
+			return new ResponseEntity<ServiceRecord>(HttpStatus.NO_CONTENT);
+
+	}
+
 	// get all available service types for a specific car type
 	@RequestMapping(value = "/car_type/{carTypeId}/service_types", method = RequestMethod.GET)
 	public List<Long> listAllServiceTypes(@PathVariable Long carTypeId) {

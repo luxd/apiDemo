@@ -16,10 +16,14 @@ public interface CarService {
 
 	List<ServiceRecord> findAllRecordsByCarId(Long carId);
 
+	ServiceRecord updateRecordsByCarId(Long carId, ServiceRecord serviceRecord);
+
 	List<Long> findServiceTypesByCarTypeId(Long carTypeId);
 
 	Car updateCreateCar(Car car);
 
 	Car deleteCar(Long carId);
+
+	ServiceRecord deleteRecordsByServiceId(Long carId, Long serviceId);
 
 }

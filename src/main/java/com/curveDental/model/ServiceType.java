@@ -26,7 +26,7 @@ public class ServiceType implements Serializable {
 	@JsonIgnore
 	private List<CarType> carTypes = new ArrayList<>();
 
-	@ManyToMany(mappedBy = "serviceTypes")
+	@ManyToMany(mappedBy = "serviceTypes", cascade = CascadeType.MERGE)
 	@JsonIgnore
 	private List<ServiceRecord> serviceRecords = new ArrayList<>();
 

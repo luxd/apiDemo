@@ -24,6 +24,9 @@ public class ServiceRecord  implements Serializable {
 	@Column(name = "service_date", nullable = false)
 	private Date serviceDate;
 
+	@Column(name = "car_id", nullable = false)
+	private Long carId;
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "car_id", referencedColumnName = "car_id", insertable = false,
 		updatable = false)
@@ -37,7 +40,7 @@ public class ServiceRecord  implements Serializable {
 	// updatable = false)
 	// @JsonIgnore
 	// private ServiceType serviceType;
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "servicerecord_servicetype",
 		joinColumns = @JoinColumn(name = "service_record_id"),
 		inverseJoinColumns = @JoinColumn(name = "service_type_id"))
@@ -69,6 +72,14 @@ public class ServiceRecord  implements Serializable {
 		this.car = car;
 	}
 
+
+	public Long getCarId() {
+		return carId;
+	}
+
+	public void setCarId(Long carId) {
+		this.carId = carId;
+	}
 
 	public Date getServiceDate() {
 		return serviceDate;

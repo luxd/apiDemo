@@ -24,6 +24,7 @@ public class CarServiceImpl implements CarService {
 	GenericHibernateDao<Car> carDAO;
 	GenericHibernateDao<CarType> carTypeDAO;
 	GenericHibernateDao<ServiceType> serviceTypeDAO;
+	GenericHibernateDao<ServiceRecord> serviceRecordDAO;
 
 	@Autowired
 	public void setCarDao(GenericHibernateDao<Car> daoToSet) {
@@ -41,6 +42,12 @@ public class CarServiceImpl implements CarService {
 	public void setServiceTypeDao(GenericHibernateDao<ServiceType> daoToSet) {
 		serviceTypeDAO = daoToSet;
 		serviceTypeDAO.setClazz(ServiceType.class);
+	}
+
+	@Autowired
+	public void setServiceRecordDao(GenericHibernateDao<ServiceRecord> daoToSet) {
+		serviceRecordDAO = daoToSet;
+		serviceRecordDAO.setClazz(ServiceRecord.class);
 	}
 
 
@@ -104,20 +111,9 @@ public class CarServiceImpl implements CarService {
 		for(ServiceType serviceType : carType.getServiceTypes()){
 			rtn.add(serviceType.getServiceTypeId());
 		}
-			
-			
-			
-//		List<ServiceType> serviceTypes = serviceTypeDAO.findAll();
-//		for (ServiceType serviceType : serviceTypes) {
-//			CarType carType = carTypeDAO.findOne(carTypeId);
-//			boolean isAllowed = false;
-//			if (carType.getServiceTypes().contains(serviceType))
-//				isAllowed = true;
-//			rtn.add(new ServiceTypeDTO(serviceType.getServiceTypeId(),
-//				serviceType.getServiceTypeName(), isAllowed));
-//		}
 		return rtn;
 	}
+
 
 	// when changing carType, the service record may be deleted as service may
 	// be not allowed after change
@@ -154,6 +150,53 @@ public class CarServiceImpl implements CarService {
 		carDAO.delete(car);
 		return car;
 
+	}
+
+	@Override
+	public ServiceRecord updateRecordsByCarId(Long carId, ServiceRecord serviceRecord) {
+		Car car = carDAO.findOne(carId);
+		if (car == null)
+			throw new ValidationException(Constants.INVALID_CAR_ID, Constants.VALIDATION_ERROR);
+
+		serviceRecord.setCarId(carId);
+		ServiceRecord newServiceRecord = serviceRecordDAO.findOne(serviceRecord.getServiceId());
+		if (newServiceRecord == null) {
+			serviceRecord.setServiceId(null);
+			Long id = serviceRecordDAO.create(serviceRecord);
+			serviceRecord.setServiceId(id);
+		} else {
+
+			newServiceRecord.setServiceDate(serviceRecord.getServiceDate());
+			List<ServiceType> existServiceTypes = new ArrayList<>();
+			for (ServiceType serviceType : newServiceRecord.getServiceTypes()) {
+				existServiceTypes.add(serviceType);
+			}
+			for (ServiceType serviceType : existServiceTypes) {
+				if (!serviceRecord.getServiceTypes().contains(serviceType))
+					newServiceRecord.removeServiceType(serviceType);
+			}
+			for (ServiceType serviceType : serviceRecord.getServiceTypes()) {
+				if (!existServiceTypes.contains(serviceType))
+					newServiceRecord.addServiceType(serviceType);
+			}
+
+			serviceRecordDAO.update(newServiceRecord);
+
+		}
+		return serviceRecord;
+	}
+
+	@Override
+	public ServiceRecord deleteRecordsByServiceId(Long carId, Long serviceId) {
+		Car car = carDAO.findOne(carId);
+		if (car == null)
+			throw new ValidationException(Constants.INVALID_CAR_ID, Constants.VALIDATION_ERROR);
+		ServiceRecord record = serviceRecordDAO.findOne(serviceId);
+		if (record == null) {
+			return null;
+		}
+		serviceRecordDAO.delete(record);
+		return record;
 	}
 
 }
