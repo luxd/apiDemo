@@ -19,10 +19,6 @@ public class DBConfiguration {
 	@Bean
 	public DataSource dataSource() {
 
-		// EmbeddedDatabaseBuilder builder = new EmbeddedDatabaseBuilder();
-		// EmbeddedDatabase dataSource =
-		// builder.setType(EmbeddedDatabaseType.H2)
-		// .addScript("sql/schema.sql").addScript("sql/data.sql").build();
 
 		DriverManagerDataSource dataSource = new DriverManagerDataSource();
 		dataSource.setDriverClassName("com.mysql.jdbc.Driver");
@@ -47,7 +43,6 @@ public class DBConfiguration {
 		properties.put("hibernate.show_sql", "true");
 		properties.put("hibernate.format_sql", "true");
 		properties.put("hibernate.hbm2ddl.auto", "create-drop");
-		// properties.put("hibernate.lazy", "false");
 		properties.put("hibernate.hbm2ddl.import_files", "sql/data.sql");
 		return properties;
 	}
@@ -58,33 +53,5 @@ public class DBConfiguration {
 		txManager.setSessionFactory(sessionFactory);
 		return txManager;
 	}
-	/*
-	 * @Bean
-	 * public DataSource dataSource() {
-	 * return new
-	 * EmbeddedDatabaseBuilder().generateUniqueName(false).setName("testdb")
-	 * .setType(EmbeddedDatabaseType.H2).addDefaultScripts().setScriptEncoding(
-	 * "UTF-8")
-	 * .ignoreFailedDrops(true).build();
-	 * }
-	 * 
-	 * @Bean
-	 * public NamedParameterJdbcTemplate namedParamJdbcTemplate() {
-	 * NamedParameterJdbcTemplate namedParamJdbcTemplate = new
-	 * NamedParameterJdbcTemplate(
-	 * dataSource());
-	 * return namedParamJdbcTemplate;
-	 * }
-	 * EmbeddedDatabaseBuilder builder = new EmbeddedDatabaseBuilder();
-	 * EmbeddedDatabase db =
-	 * builder.setType(EmbeddedDatabaseType.H2).addScript("sql/schema1.sql")
-	 * .addScript("sql/data.sql").build();
-	 * return db;
-	 * 
-	 * DriverManagerDataSource dataSource = new DriverManagerDataSource();
-	 * dataSource.setDriverClassName("org.h2.Driver");
-	 * dataSource.setUrl("jdbc:h2:mem:testdb");
-	 * dataSource.setUsername("");
-	 * dataSource.setPassword("");
-	 */
+
 }

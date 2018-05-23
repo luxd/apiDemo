@@ -31,9 +31,6 @@ public class Car implements Serializable {
 	@Column(name = "odometer", nullable = false)
 	private int odometer;
 
-	// @Transient
-	// @JsonSerialize
-	// @JsonDeserialize
 	@Column(name = "car_type_id", nullable = false)
 	private Long carTypeId;
 

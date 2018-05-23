@@ -74,29 +74,6 @@ public class CarServiceImpl implements CarService {
 			Hibernate.initialize(record.getServiceTypes());
 		}
 		return car.getRecords();
-		// List<ServiceRecord> records = car.getRecords();
-		// List<ServiceType> serviceTypes = serviceTypeDAO.findAll();
-		// List<ServiceRecordDTO> recordDTOs = new ArrayList<>();
-		// for (ServiceRecord record : records) {
-		// boolean isChecked = false;
-		// boolean isAllowed = false;
-		// for (ServiceType serviceType : serviceTypes) {
-		// if (serviceType.getServiceTypeId() ==
-		// record.getServiceType().getServiceTypeId()) {
-		// isChecked = true;
-		// break;
-		// }
-		// }
-		// Long serviceId = record.getServiceId();
-		// Long service_type_id = record.getServiceType().getServiceTypeId();
-		// Date serviceDate = record.getServiceDate();
-		//
-		// recordDTOs.add(new ServiceRecordDTO(serviceId, service_type_id,
-		// serviceDate, isAllowed,
-		// isChecked));
-		// }
-		// return recordDTOs;
-		// return null;
 	}
 
 	@Override

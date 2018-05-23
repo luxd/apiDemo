@@ -33,13 +33,6 @@ public class ServiceRecord  implements Serializable {
 	@JsonIgnore
 	private Car car;
 
-	// @ManyToOne(fetch = FetchType.LAZY)
-	// @JoinColumn(name = "service_type_id", referencedColumnName =
-	// "service_type_id",
-	// insertable = false,
-	// updatable = false)
-	// @JsonIgnore
-	// private ServiceType serviceType;
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "servicerecord_servicetype",
 		joinColumns = @JoinColumn(name = "service_record_id"),
